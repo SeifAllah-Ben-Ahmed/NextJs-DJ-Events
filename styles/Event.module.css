@@ -1,0 +1,23 @@
+.event {
+    position: relative;
+    padding-top: 40px;
+}
+.event h3 {
+    font-size: 25px;
+}
+.event p {
+    margin: 10px 0;
+}
+.image {
+    margin-bottom: 20px;
+}
+.controls {
+    position: absolute;
+    right: 30;
+    top: 0;
+}
+.delete {
+    cursor: pointer;
+    margin-left: 20px;
+    color: red;
+}
