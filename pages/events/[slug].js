@@ -1,19 +1,21 @@
 import Link from "next/link";
 import Image from "next/image";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { FaPencilAlt, FaTimes } from "react-icons/fa";
 import Layout from "@/components/Layout";
 import { API_URL } from "@/config/index";
 import styles from "@/styles/Event.module.css";
+import { useRouter } from "next/router";
 
 export default function EventPage({ event }) {
-    const deleteEvent = (e) => {
-        console.log("delete");
-    };
+    const router = useRouter();
+
     return (
         <Layout>
             <div className={styles.event}>
-                <div className={styles.controls}>
-                    <Link href={`/event/edit/${event.id}`}>
+                {/* <div className={styles.controls}>
+                    <Link href={`/events/edit/${event.id}`}>
                         <a>
                             <FaPencilAlt /> Edit Event
                         </a>
@@ -21,28 +23,33 @@ export default function EventPage({ event }) {
                     <a className={styles.delete} onClick={deleteEvent}>
                         <FaTimes /> Delete Event
                     </a>
-                </div>
+                </div> */}
+                <span>
+                    {new Date(event.date).toLocaleDateString("en-US")} at{" "}
+                    {event.time}
+                </span>
+                <h1>{event.name}</h1>
+                <ToastContainer />
+                {event.image && (
+                    <div className={styles.image}>
+                        <Image
+                            src={event.image.formats.medium.url}
+                            width={960}
+                            height={600}
+                        />
+                    </div>
+                )}
+                <h3>Performers :</h3>
+                <p>{event.performers}</p>
+                <h3>Description:</h3>
+                <p> {event.description} </p>
+                <h3> Venue:</h3>
+                <p> {event.venue} </p>
+                <p> {event.address} </p>
+                <Link href="/events">
+                    <a className={styles.back}>{"<"} Go Back</a>
+                </Link>
             </div>
-            <span>
-                {event.date} at {event.time}
-            </span>
-            <h1>{event.name}</h1>
-
-            {event.image && (
-                <div classname={styles.image}>
-                    <Image src={event.image} width={960} height={600} />
-                </div>
-            )}
-            <h3>Performers :</h3>
-            <p>{event.performers}</p>
-            <h3>Description:</h3>
-            <p> {event.description} </p>
-            <h3> Venue:</h3>
-            <p> {event.venue} </p>
-            <p> {event.address} </p>
-            <Link href="/events">
-                <a className={styles.back}>{"<"} Go Back</a>
-            </Link>
         </Layout>
     );
 }
@@ -55,7 +62,7 @@ export default function EventPage({ event }) {
 // }
 
 export async function getStaticPaths() {
-    const res = await fetch(`${API_URL}/api/events`);
+    const res = await fetch(`${API_URL}/events`);
     const events = await res.json();
     const paths = events.map((event) => ({
         params: { slug: event.slug },
@@ -66,7 +73,7 @@ export async function getStaticPaths() {
     };
 }
 export async function getStaticProps({ params: { slug } }) {
-    const res = await fetch(`${API_URL}/api/events/${slug}`);
+    const res = await fetch(`${API_URL}/events?slug=${slug}`);
     const event = await res.json();
 
     return {
